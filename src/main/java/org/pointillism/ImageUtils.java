@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.awt.Color;
 import java.util.Random;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.lang.Math;
 public class ImageUtils extends AbstractParser{
@@ -23,6 +24,7 @@ public class ImageUtils extends AbstractParser{
   private float stepX;
   private float stepY;
   private int[][][] matrix;
+private List<Color> list=null;
 	public ImageUtils(String s,int offsetX,int offsetY){
 		super(s);
 		this.offsetX=offsetX;
@@ -51,17 +53,15 @@ public class ImageUtils extends AbstractParser{
 		public ImageUtils(String s){
 		super(s);
 		this.offsetX=5;
-	  this.offsetY=5;
+	    this.offsetY=5;
 		
-		this.noise=.2;
-		this.tol=25;
-		
+	
 		try{
 		  this.in=ImageIO.read(file);
 		  this.width=this.in.getWidth();
-			this.height=this.in.getHeight();
-			this.mFloat=((float)this.width)/offsetX;
-			this.nFloat=((float)this.height)/offsetY;
+		  this.height=this.in.getHeight();
+		  this.mFloat=((float)this.width)/offsetX;
+		  this.nFloat=((float)this.height)/offsetY;
 		  this.mInt=Math.round(this.mFloat);
 		  this.nInt=Math.round(this.nFloat);
 		  this.stepX=(float)this.width/this.mInt;
@@ -135,10 +135,27 @@ public class ImageUtils extends AbstractParser{
 	{
 	  return mInt;
 	}	
-	public static void main(String args[]){
+
+    public List<Color> toList()
+    {
+         
+        
+        if(this.list==null)
+        {            
+            this.list=new ArrayList<Color>();
+            for(int i=0;i<this.width;i++)
+            {
+			    for (int j=0;j<this.height;j++)
+			    {
+			        list.add(new Color(this.in.getRGB(i,j)));
+			    }
+		    }
+        }
+        return this.list;
+    }
+    
+	public static void main(String args[])
+    {
 		ImageUtils p=new ImageUtils(args[0]);
-		p.toMatrix();
-    System.out.println(p.printMatrix());
-		
 	}
 }
